@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "522566110362",
+    "project_id": "course-dd6fc",
+    "storage_bucket": "course-dd6fc.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:522566110362:android:aeac09cc639afe081f2323",
+        "android_client_info": {
+          "package_name": "com.example.google"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAUwX6KUdRQxGMjIQUDPwTjgbeXZjIyx6g"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
