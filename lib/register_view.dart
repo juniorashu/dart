@@ -1,5 +1,8 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'dart:developer' as devtools show log;
+
+import 'package:google/constants/routes.dart';
 
 class RegisterView extends StatefulWidget {
   const RegisterView({super.key});
@@ -59,16 +62,18 @@ class _RegisterViewState extends State<RegisterView> {
               final password = _password.text;
               try {
                 final userCredential = await FirebaseAuth.instance
-                    .signInWithEmailAndPassword(
-                        email: email, password: password);
-                print(userCredential);
+                    .createUserWithEmailAndPassword(
+                        email: email,
+                         password: password
+                         );
+                devtools.log(userCredential.toString());
               } on FirebaseAuthException catch (e) {
                 if (e.code == 'weak-password') {
-                  print('weak password');
+                  devtools.log('weak password');
                 } else if (e.code == 'email-laready-in-use') {
-                  print('Email is already in use good boys');
+                  devtools.log('Email is already in use good boys');
                 } else if (e.code == 'invalid-email') {
-                  print('invalid email entered');
+                  devtools.log('invalid email entered');
                 }
               }
             },
@@ -77,9 +82,12 @@ class _RegisterViewState extends State<RegisterView> {
           TextButton(
             onPressed: () {
               Navigator.of(context)
-                  .pushNamedAndRemoveUntil('/login/', (route) => false);
+                  .pushNamedAndRemoveUntil(
+                    loginRoute, 
+                  (route) => false,
+                  );
             },
-            child: const Text('not registered yet? Register here do it now'),
+            child: const Text('Already registered? Login here'),
           )
         ],
       ),
