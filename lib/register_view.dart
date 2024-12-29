@@ -1,8 +1,8 @@
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'dart:developer' as devtools show log;
-
 import 'package:google/constants/routes.dart';
+import 'package:google/services/auth/auth_exceptions.dart';
+import 'package:google/services/auth/auth_service.dart';
+import 'package:google/utilities/show_error_dialog.dart';
 
 class RegisterView extends StatefulWidget {
   const RegisterView({super.key});
@@ -61,31 +61,34 @@ class _RegisterViewState extends State<RegisterView> {
               final email = _email.text;
               final password = _password.text;
               try {
-                final userCredential = await FirebaseAuth.instance
-                    .createUserWithEmailAndPassword(
-                        email: email,
-                         password: password
-                         );
-                devtools.log(userCredential.toString());
-              } on FirebaseAuthException catch (e) {
-                if (e.code == 'weak-password') {
-                  devtools.log('weak password');
-                } else if (e.code == 'email-laready-in-use') {
-                  devtools.log('Email is already in use good boys');
-                } else if (e.code == 'invalid-email') {
-                  devtools.log('invalid email entered');
-                }
+                await AuthService.firebase()
+                    .createUser(email: email, password: password);
+                AuthService.firebase().sendEmailVerification();
+                Navigator.of(context).pushNamed(verifyEmailRoute);
+              } on WrongPasswordAuthException {
+                await showErroDialog(context, 'weak password');
+              } on EmailAlreadyInUseAuthException {
+                await showErroDialog(context, 'Email is Already in use');
+              } on InvalidEmailAuthException {
+                 await showErroDialog(
+                      context, 'This is invalid email address');
+              } on  GenericAuthException {
+                    await showErroDialog(
+                    context,
+                    'Authentication Error',
+                  );
               }
+             
+              
             },
             child: const Text(' Register'),
           ),
           TextButton(
             onPressed: () {
-              Navigator.of(context)
-                  .pushNamedAndRemoveUntil(
-                    loginRoute, 
-                  (route) => false,
-                  );
+              Navigator.of(context).pushNamedAndRemoveUntil(
+                loginRoute,
+                (route) => false,
+              );
             },
             child: const Text('Already registered? Login here'),
           )
