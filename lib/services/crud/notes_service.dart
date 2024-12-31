@@ -95,7 +95,7 @@ class NotesService {
     final db = _getDatabaseOrthrow();
     final deletedCount = await db.delete(
       noteTable,
-      where: 'id=?',
+      where: 'id = ?',
       whereArgs: [id],
     );
     if (deletedCount == 0) {
@@ -113,7 +113,7 @@ class NotesService {
 
     final dbUser = await getUser(email: owner.email);
     if (dbUser != owner) {
-      throw CouldNoteDeleteUser();
+      throw CouldNotFindUser();
     }
     const text = '';
     // create the note
@@ -123,7 +123,11 @@ class NotesService {
       issyncColumn: 1,
     });
     final note = DatabaseNote(
-        id: noteId, userid: owner.id, text: text, issyncserver: true);
+      id: noteId,
+      userid: owner.id,
+      text: text,
+      issyncserver: true,
+    );
 
     _notes.add(note);
     _notesStreamController.add(_notes);
